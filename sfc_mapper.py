@@ -37,7 +37,7 @@ def loadSizeFacetCache():
         "SZ_DIM1_NAME": str, "SZ_DIM2_NAME": str, "SZ_VARIANT_SORT_ORDER": str, "SZ_FACET_DESCRIPTION": str,
         "SZ_FCT_VAL_NM": str, "SZ_FCT_VAL_NM_2": str, "COL_POS_NBR": str, "CATEGORY_GROUP_TAG_NAME": str,
         "DEPARTMENT_TAG_NAME": str, "PRODUCT_TYPE_TAG_NAME": str
-    }).fillna('')
+    })
     for index, row in sfc_data.iterrows():
         #values from the spreadsheet
         categoryGroupTag, departmentTag, productTypeTag, rowSfctgId = \
@@ -70,7 +70,7 @@ def loadSizeModelCache():
         "SF_SRT_ORD_NBR": str, "SZ_FCT_CATG_ADMN_NM": str, "SZ_FACET_WEB_NAME": str, "SZ_FCT_DIM_NAME": str,
         "SF_SZ_SRT_ORD_NBR": str, "SZ_FCT_VAL1_SLCTD": str, "SZ_FCT_VAL2_SLCTD": str, "SZ_VAR_NM": str,
         "SZ_VAR_SRT_ORDR": str, "DIM_VAL_TXT": str, "DIM_VAL2_TXT": str, "DIM_VAL3_TXT": str
-    }).fillna('')
+    })
     sizeModelCache = {}
     for index, row in sz_mapp_data.iterrows():
         # values from the spreadsheet
