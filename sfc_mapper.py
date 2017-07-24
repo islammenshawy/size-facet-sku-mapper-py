@@ -21,8 +21,8 @@ def buildSizeModelKey(sizeModel):
 def buildSizeFacetBreadCrumb(row):
        sizeFacetWebName, sizeFacetDimName, variant, dimension, sizeFacetVar1Selected, sizeFacetVar2Selected \
         = row.SZ_FACET_WEB_NAME, row.SZ_FCT_DIM_NAME, row.SZ_VAR_NM, row.DIMENSION, row.SZ_FCT_VAL1_SLCTD, row.SZ_FCT_VAL2_SLCTD
-       return "|{0}|{1}|{2}|{3}|{4}|Dim_{5}|".format(sizeFacetWebName, sizeFacetDimName, variant, sizeFacetVar1Selected
-                                                 , sizeFacetVar2Selected, dimension)
+       return "{0}|{1}|{2}|{3}|{4}".format(sizeFacetWebName, sizeFacetDimName, variant, sizeFacetVar1Selected
+                                                 , sizeFacetVar2Selected)
 
 # **********************************
 # ********* Load SFC cache *********
@@ -37,7 +37,7 @@ def loadSizeFacetCache():
         "SZ_DIM1_NAME": str, "SZ_DIM2_NAME": str, "SZ_VARIANT_SORT_ORDER": str, "SZ_FACET_DESCRIPTION": str,
         "SZ_FCT_VAL_NM": str, "SZ_FCT_VAL_NM_2": str, "COL_POS_NBR": str, "CATEGORY_GROUP_TAG_NAME": str,
         "DEPARTMENT_TAG_NAME": str, "PRODUCT_TYPE_TAG_NAME": str
-    })
+    }).fillna('')
     for index, row in sfc_data.iterrows():
         #values from the spreadsheet
         categoryGroupTag, departmentTag, productTypeTag, rowSfctgId = \
@@ -70,7 +70,7 @@ def loadSizeModelCache():
         "SF_SRT_ORD_NBR": str, "SZ_FCT_CATG_ADMN_NM": str, "SZ_FACET_WEB_NAME": str, "SZ_FCT_DIM_NAME": str,
         "SF_SZ_SRT_ORD_NBR": str, "SZ_FCT_VAL1_SLCTD": str, "SZ_FCT_VAL2_SLCTD": str, "SZ_VAR_NM": str,
         "SZ_VAR_SRT_ORDR": str, "DIM_VAL_TXT": str, "DIM_VAL2_TXT": str, "DIM_VAL3_TXT": str
-    })
+    }).fillna('')
     sizeModelCache = {}
     for index, row in sz_mapp_data.iterrows():
         # values from the spreadsheet
@@ -156,7 +156,7 @@ def get_product_sfcs(tags_json, size_model, sizecd_skus_pairs, tags_cache, size_
 
         for sizecd_sku_pair in sizecd_skus_pairs:
             if sizecd_sku_pair.get(current_size_code) and valid_sfcs_map.get(current_sfc_id) and not handled_size_models.get(sizecd_sku_pair.get(current_size_code) + '_' + current_dimension):
-                sku_dimension_bread_crumb = '|' + sizecd_sku_pair.get(current_size_code) + size_model['sizeFacetBreadCrumb']
+                sku_dimension_bread_crumb = sizecd_sku_pair.get(current_size_code) + size_model['sizeFacetBreadCrumb']
                 sku_size_dim_pair = []
                 if skus_size_dimension_pair.get(sizecd_sku_pair.get(current_size_code)) is not None:
                     sku_size_dim_pair = skus_size_dimension_pair.get(sizecd_sku_pair.get(current_size_code))
@@ -185,7 +185,7 @@ def create_style_skus_mapping_records(style_records, output_file, error_output_f
             product_tags = json.loads(attributes[style_tags_index])
         elif attributes[0] == 'SC':
             size_model = attributes[size_model_index]
-        elif attributes[0] == 'SK' and attributes[sku_inventory_status_index] == '0':
+        elif attributes[0] == 'SK':# and attributes[sku_inventory_status_index] == '0':
             sku_bus_id_sz_code_pair = {}
             sku_bus_id = attributes[1]
             sizecode = attributes[1][-4:]
@@ -198,7 +198,8 @@ def create_style_skus_mapping_records(style_records, output_file, error_output_f
         if SFCs is not None and len(SFCs) > 0:
             for sizeFacet in SFCs:
                 #Write the facets to the file
-                output_file.write(','.join(str(p) for p in sizeFacet) + '\n')
+                sku = sizeFacet[0][0:13];
+                output_file.write(sku + '\t'+ ','.join(str(p[13:]) for p in sizeFacet) + '\n')
         else:
             for record in style_records:
                 if record.startswith('ST'):
