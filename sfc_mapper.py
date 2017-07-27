@@ -237,7 +237,8 @@ def create_mapping_file():
             try:
                 create_style_skus_mapping_records(styleRecords['records'], outputFile, errorOutputFile, tagsCache,
                                               sizeModelCache)
-            except OSError:
+            except Exception, e:
+                print 'Exception happened:' + str(type(e)) + str(e);
                 pass
             styleRecords['records'] = []
             styleRecords['records'].append(line)
