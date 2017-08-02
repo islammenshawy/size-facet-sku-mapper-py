@@ -153,10 +153,11 @@ def get_product_sfcs(tags_json, size_model, sizecd_skus_pairs, tags_cache, size_
         current_size_code = size_model['sizeCode']
         current_sfc_id = size_model['sfcId']
         current_dimension = size_model['dimension']
+        current_sfc_name = size_model['sizeFacetName']
 
         for sizecd_sku_pair in sizecd_skus_pairs:
-            if sizecd_sku_pair.get(current_size_code) and valid_sfcs_map.get(current_sfc_id) and not handled_size_models.get(sizecd_sku_pair.get(current_size_code) + '_' + current_dimension):
-                sku_dimension_bread_crumb = sizecd_sku_pair.get(current_size_code) + size_model['sizeFacetBreadCrumb']
+            if sizecd_sku_pair.get(current_size_code) and valid_sfcs_map.get(current_sfc_id):
+                sku_dimension_bread_crumb = sizecd_sku_pair.get(current_size_code) + '|' + current_sfc_name + '|' + size_model['sizeFacetBreadCrumb'] + '|Dim_' + current_dimension
                 sku_size_dim_pair = []
                 if skus_size_dimension_pair.get(sizecd_sku_pair.get(current_size_code)) is not None:
                     sku_size_dim_pair = skus_size_dimension_pair.get(sizecd_sku_pair.get(current_size_code))
@@ -164,8 +165,11 @@ def get_product_sfcs(tags_json, size_model, sizecd_skus_pairs, tags_cache, size_
                 skus_size_dimension_pair[str(sizecd_sku_pair.get(current_size_code))] = sku_size_dim_pair
                 handled_size_models[sizecd_sku_pair.get(current_size_code) + '_' + current_dimension] = True
     results = []
+
+
     for i in skus_size_dimension_pair:
-        results.append(skus_size_dimension_pair[i])
+        if len(skus_size_dimension_pair[i]) > 2:
+            results.append(skus_size_dimension_pair[i])
     return results
 
 
@@ -199,7 +203,7 @@ def create_style_skus_mapping_records(style_records, output_file, error_output_f
             for sizeFacet in SFCs:
                 #Write the facets to the file
                 sku = sizeFacet[0][0:13];
-                output_file.write(sku + '\t'+ ','.join(str(p[13:]) for p in sizeFacet) + '\n')
+                output_file.write(sku + '\t'+ '\t,\t'.join(str(p[13:]) for p in sizeFacet) + '\n')
         else:
             for record in style_records:
                 if record.startswith('ST'):
@@ -238,7 +242,7 @@ def create_mapping_file():
                 create_style_skus_mapping_records(styleRecords['records'], outputFile, errorOutputFile, tagsCache,
                                               sizeModelCache)
             except Exception, e:
-                print 'Exception happened:' + str(type(e)) + str(e);
+                print 'Exception happened:' + str(type(e)) + str(e)
                 pass
             styleRecords['records'] = []
             styleRecords['records'].append(line)
