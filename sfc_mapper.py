@@ -32,7 +32,7 @@ def loadSizeFacetCache(brand):
     print("--- Started loading SFCs cache. ---")
     tagsCache = {}
     sfc_data = pd.read_csv(categories_file_name, dtype = {
-        "SZ_FCT_BRAND": str, "SZ_FCT_CATG_ID": str, "SZ_FCT_SORT_ORDER_NUMBER": str, "SZ_FCT_NUMBER_OF_DIM": str, "DIMENSION": str,
+        "SZ_FCT_CATG_ID": str, "SZ_FCT_SORT_ORDER_NUMBER": str, "SZ_FCT_NUMBER_OF_DIM": str, "DIMENSION": str,
         "SZ_FCT_NAME": str, "SZ_FCT_ALPH_ALT_CTG_ID": str, "SZ_FCT_ALPH_ALT_CTG": str, "SZ_FACET_WEB_NAME": str,
         "SZ_DIM1_NAME": str, "SZ_DIM2_NAME": str, "SZ_VARIANT_SORT_ORDER": str, "SZ_FACET_DESCRIPTION": str,
         "SZ_FCT_VAL_NM": str, "SZ_FCT_VAL_NM_2": str, "COL_POS_NBR": str, "CATEGORY_GROUP_TAG_NAME": str,
@@ -56,8 +56,9 @@ def loadSizeFacetCache(brand):
             else:
                 cacheTagValueArray = []
                 cacheTagValueArray.append(rowSfctgId)
-            tagsCache[tagsCachekey]= cacheTagValueArray
+                tagsCache[tagsCachekey]= cacheTagValueArray
     print("--- Took %s seconds to load SFCs cache. ---" % (time.time() - sfc_start_time))
+    #print("--- SFC cache. ---" + str(tagsCache))
     return tagsCache
 
 # ********************************************
