@@ -27,7 +27,7 @@ def buildSizeFacetBreadCrumb(row):
 # **********************************
 # ********* Load SFC cache *********
 # **********************************
-def loadSizeFacetCache():
+def loadSizeFacetCache(brand):
     sfc_start_time = time.time()
     print("--- Started loading SFCs cache. ---")
     tagsCache = {}
@@ -39,24 +39,26 @@ def loadSizeFacetCache():
         "DEPARTMENT_TAG_NAME": str, "PRODUCT_TYPE_TAG_NAME": str
     }).fillna('')
     for index, row in sfc_data.iterrows():
-        #values from the spreadsheet
-        categoryGroupTag, departmentTag, productTypeTag, rowSfctgId = \
-            row.CATEGORY_GROUP_TAG_NAME, row.DEPARTMENT_TAG_NAME, row.PRODUCT_TYPE_TAG_NAME, row.SZ_FCT_CATG_ID
-        tagsCachekey = buildSFCsCacheTagKey(departmentTag, productTypeTag, categoryGroupTag)
-        tagsCacheValue = tagsCache.get(tagsCachekey)
-        if tagsCacheValue is not None:
-            alreadyExists = False
-            for currentSfcId in tagsCacheValue:
-                if currentSfcId == rowSfctgId:
-                    alreadyExists = True
-                    break
-            if not alreadyExists:
-                tagsCacheValue.append(rowSfctgId)
-        else:
-            cacheTagValueArray = []
-            cacheTagValueArray.append(rowSfctgId)
-            tagsCache[tagsCachekey]= cacheTagValueArray
+        if(row.SZ_FCT_BRAND == brand):
+            #values from the spreadsheet
+            categoryGroupTag, departmentTag, productTypeTag, rowSfctgId = \
+                row.CATEGORY_GROUP_TAG_NAME, row.DEPARTMENT_TAG_NAME, row.PRODUCT_TYPE_TAG_NAME, row.SZ_FCT_CATG_ID
+            tagsCachekey = buildSFCsCacheTagKey(departmentTag, productTypeTag, categoryGroupTag)
+            tagsCacheValue = tagsCache.get(tagsCachekey)
+            if tagsCacheValue is not None:
+                alreadyExists = False
+                for currentSfcId in tagsCacheValue:
+                    if currentSfcId == rowSfctgId:
+                        alreadyExists = True
+                        break
+                if not alreadyExists:
+                    tagsCacheValue.append(rowSfctgId)
+            else:
+                cacheTagValueArray = []
+                cacheTagValueArray.append(rowSfctgId)
+                tagsCache[tagsCachekey]= cacheTagValueArray
     print("--- Took %s seconds to load SFCs cache. ---" % (time.time() - sfc_start_time))
+    #print("--- SFC cache. ---" + str(tagsCache))
     return tagsCache
 
 # ********************************************
@@ -210,10 +212,11 @@ def create_style_skus_mapping_records(style_records, output_file, error_output_f
 #Function that will create the mapping files based on the input file
 def create_mapping_file():
     start_time = time.time()
-    print '--- Processing input File {0} ---'.format(str(sys.argv[1]))
-    tagsCache = loadSizeFacetCache()
-    sizeModelCache = loadSizeModelCache()
     productFeedFileName =  str(sys.argv[1])
+    brand = os.path.basename(productFeedFileName).split('_')[0].upper()
+    print '--- Processing input File {0} for Brand [{1}] ---'.format(str(sys.argv[1]), brand)
+    tagsCache = loadSizeFacetCache(brand)
+    sizeModelCache = loadSizeModelCache()
     styleRecords = {}
     productMappingOutputFileName = productFeedFileName + '_SFCs'
     productMappingErrorOutputFile = productFeedFileName + '_SFCs_Non'
