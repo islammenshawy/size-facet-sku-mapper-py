@@ -21,6 +21,6 @@ SKU|WebModel|Dimension|Variance|size1|size2|Dimension|
 
 ### Examples run with sample file
 ```
-./sfc_mapper.sh ${File_Name}
+./sfc_mapper.sh ${File_Name} ${brand}
 Ex: ./sfc_mapper.sh on_us_ol_fullText 
 ```
