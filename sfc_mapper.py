@@ -213,7 +213,7 @@ def create_style_skus_mapping_records(style_records, output_file, error_output_f
 def create_mapping_file():
     start_time = time.time()
     productFeedFileName =  str(sys.argv[1])
-    brand = os.path.basename(productFeedFileName).split('_')[0].upper()
+    brand = str(sys.argv[2]).strip().upper()
     print '--- Processing input File {0} for Brand [{1}] ---'.format(str(sys.argv[1]), brand)
     tagsCache = loadSizeFacetCache(brand)
     sizeModelCache = loadSizeModelCache()

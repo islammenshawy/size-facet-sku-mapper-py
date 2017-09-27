@@ -3,12 +3,18 @@ set -e
 
 INPUT_FILE=""
 CURRENT_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+CURRENT_BRAND="ON"
 
-if [ ! -z "$1" ];
+if [ ! -z "$1" ] && [ ! -z "$2" ];
   then
     INPUT_FILE=`echo "$1"`
-    echo "Parsing input file: $INPUT_FILE"
-  else
+    CURRENT_BRAND=`echo "$2"`
+    echo "Parsing input file: $INPUT_FILE for brand: $CURRENT_BRAND"
+elif [ ! -z "$1" ] && [ -z "$2" ];
+  then
+    INPUT_FILE=`echo "$1"`
+    echo "Parsing input file: $INPUT_FILE for brand: $CURRENT_BRAND"
+else
     echo "missing input file param"
     exit 1
 fi
@@ -20,7 +26,7 @@ if ! (pip freeze | grep pandas) > /dev/null; then
 fi
 
 
-python sfc_mapper.py $CURRENT_DIR/$INPUT_FILE
+python sfc_mapper.py $CURRENT_DIR/$INPUT_FILE $CURRENT_BRAND
 
 STATUS=$?
 if [ $STATUS -eq 0 ]
