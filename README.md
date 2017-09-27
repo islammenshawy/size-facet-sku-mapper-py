@@ -19,8 +19,8 @@ The non mapped SKUs are not associated with any SFCs and for testing purpose on 
 Header information:
 SKU|WebModel|Dimension|Variance|size1|size2|Dimension|
 
-### Examples run with sample file
+### Examples run with sample file with brand ON. Values for brand [ON,GAP,AT,BR]
 ```
 ./sfc_mapper.sh ${File_Name} ${brand}
-Ex: ./sfc_mapper.sh on_us_ol_fullText 
+Ex: ./sfc_mapper.sh on_us_ol_fullText ON
 ```
