@@ -127,7 +127,7 @@ def get_product_sfcs(tags_json, size_model, sizecd_skus_pairs, tags_cache, size_
     #Make Tags Json object into array since service sometime returns obj and sometimes array
     department_tags = jsonObjectToArray(tags_json['departmentTag'])
     product_type_tags = jsonObjectToArray(tags_json['productTag'])
-    category_group_tags = jsonObjectToArray(tags_json['categoryTag'])
+    category_group_tags = jsonObjectToArray(tags_json['categoryGroupTag'])
 
     #Filter available SFCs from the first cache by product tags
     for department_tag in department_tags:
